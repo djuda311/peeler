@@ -16,7 +16,8 @@ import time
 # setup GPIO pins
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 
 camera = PiCamera()
@@ -45,7 +46,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 		
 camera.capture(rawCapture, format="bgr")
 img = rawCapture.array
-cv2.setWindowProperty("image",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
+cv2.setWindowProperty("image",cv2.WND_PROP_AUTOSIZE,cv2.WINDOW_AUTOSIZE)
 cv2.imshow("image", img)
 cv2.imwrite('picam1.png',img)
 picam = cv2.imread('picam1.png')
@@ -58,21 +59,21 @@ imgr = copy.copy(imgl)
 img_left = imgl[300:400, 100:300]
 #cv2.waitKey()
 img_right = imgr[300:400, 400:600]
-cv2.namedWindow("img_left", cv2.WND_PROP_FULLSCREEN)
-cv2.setWindowProperty("img_left",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
-cv2.imshow("img_left", img_left)
-cv2.namedWindow("img_right", cv2.WND_PROP_FULLSCREEN)
-cv2.setWindowProperty("img_right",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
-cv2.imshow("img_right", img_right)
+#cv2.namedWindow("img_left", cv2.WND_PROP_FULLSCREEN)
+#cv2.setWindowProperty("img_left",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
+#cv2.imshow("img_left", img_left)
+#cv2.namedWindow("img_right", cv2.WND_PROP_FULLSCREEN)
+#cv2.setWindowProperty("img_right",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
+#cv2.imshow("img_right", img_right)
 #cv2.waitKey()
 
 retl, threshl = cv2.threshold(img_left,170,255,cv2.THRESH_BINARY) #converts image to black and white based on a min brightness specified
 retr, threshr = cv2.threshold(img_right,170,255,cv2.THRESH_BINARY) #converts image to black and white based on a min brightness specified
 threshl = cv2.medianBlur(threshl, 1)
 threshr = cv2.medianBlur(threshr, 1)
-cv2.imshow('threshr',threshr) #shows the black and white image
-cv2.imshow('threshl',threshl) #shows the black and white image
-cv2.waitKey()
+#cv2.imshow('threshr',threshr) #shows the black and white image
+#cv2.imshow('threshl',threshl) #shows the black and white image
+#cv2.waitKey()
 
 # ---- The contours function finds the line and turns it into a contour of binary points, 0's and 1's. ------
 # Because the line isn't consistent and is broken in a few places, the function finds multiple contours. 
@@ -109,20 +110,20 @@ rows_l,cols_l = img_left.shape[:2]
 leftyl = int((-xl*vyl/vxl) + yl)
 rightyl = int(((cols_l-xl)*vyl/vxl)+yl)
 imglline = cv2.line(img_left,(cols_l-1,rightyl),(0,leftyl),(255,250,0),1)
-cv2.namedWindow("imglline", cv2.WND_PROP_FULLSCREEN)
-cv2.setWindowProperty("imglline",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
-cv2.imshow('imglline', imglline)
-cv2.waitKey()
+#cv2.namedWindow("imglline", cv2.WND_PROP_FULLSCREEN)
+#cv2.setWindowProperty("imglline",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
+#cv2.imshow('imglline', imglline)
+#cv2.waitKey()
 
 rows_r,cols_r = imgr.shape[:2]
 [vxr,vyr,xr,yr] = cv2.fitLine(cntr, cv2.DIST_L2,0,0.01,0.01)
 leftyr = int((-xr*vyr/vxr) + yr)
 rightyr = int(((cols_r-xr)*vyr/vxr)+yr)
 imgrline = cv2.line(img_right,(cols_r-1,rightyr),(0,leftyr),(255,250,0),1)
-cv2.namedWindow("imgrline", cv2.WND_PROP_FULLSCREEN)
-cv2.setWindowProperty("imgrline",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
-cv2.imshow('imgrline', imgrline)
-cv2.waitKey()
+#cv2.namedWindow("imgrline", cv2.WND_PROP_FULLSCREEN)
+#cv2.setWindowProperty("imgrline",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
+#cv2.imshow('imgrline', imgrline)
+#cv2.waitKey()
 
 slopel = -vyl/vxl
 slopel = math.degrees(slopel)
@@ -147,9 +148,20 @@ x,y,w,h = cv2.boundingRect(cntr)
 cv2.rectangle(imgr,(x,y),(x+w,y+h),(255,255,255),2)
 lengthr = ((w**2)+(h**2))**(1/2)
 cv2.putText(img, "Right Blade Length = %s pixels" % w, (30,90), cv2.FONT_HERSHEY_SIMPLEX, 1,(255,255,255),1, cv2.LINE_AA)
+cv2.destroyAllWindows()
 cv2.namedWindow('img', cv2.WND_PROP_FULLSCREEN)
-
 cv2.setWindowProperty('img',cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
 
-cv2.imshow('img', img)
-cv2.waitKey()
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+while True:
+	close = GPIO.input(23)
+	cv2.namedWindow('img', cv2.WND_PROP_FULLSCREEN)
+	cv2.setWindowProperty('img',cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
+	cv2.imshow('img', img)
+	if close == True:
+		cv2.waitKey(5)
+	if close == False:
+		break
+		cv2.destroyAllWindows()
+	
