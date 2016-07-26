@@ -6,8 +6,8 @@ import copy
 import RPi.GPIO as GPIO
 cv2.destroyAllWindows()
 
-cv2.namedWindow('Press space to capture image', cv2.WND_PROP_AUTOSIZE)
-cv2.setWindowProperty('Press space to capture image',cv2.WND_PROP_AUTOSIZE,cv2.WINDOW_AUTOSIZE)
+cv2.namedWindow('Press space to capture image', cv2.WND_PROP_FULLSCREEN)
+cv2.setWindowProperty('Press space to capture image',cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
 
 from picamera.array import PiRGBArray
 from picamera import PiCamera
@@ -45,7 +45,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 		
 camera.capture(rawCapture, format="bgr")
 img = rawCapture.array
-cv2.setWindowProperty("image",cv2.WND_PROP_AUTOSIZE,cv2.WINDOW_AUTOSIZE)
+cv2.setWindowProperty("image",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
 cv2.imshow("image", img)
 cv2.imwrite('picam1.png',img)
 picam = cv2.imread('picam1.png')
@@ -56,15 +56,15 @@ img_gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 imgl = copy.copy(img_gray)
 imgr = copy.copy(imgl)
 img_left = imgl[300:400, 100:300]
-cv2.waitKey()
+#cv2.waitKey()
 img_right = imgr[300:400, 400:600]
-cv2.namedWindow("img_left", cv2.WND_PROP_AUTOSIZE)
-cv2.setWindowProperty("img_left",cv2.WND_PROP_AUTOSIZE,cv2.WINDOW_AUTOSIZE)
+cv2.namedWindow("img_left", cv2.WND_PROP_FULLSCREEN)
+cv2.setWindowProperty("img_left",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
 cv2.imshow("img_left", img_left)
-cv2.namedWindow("img_right", cv2.WND_PROP_AUTOSIZE)
-cv2.setWindowProperty("img_right",cv2.WND_PROP_AUTOSIZE,cv2.WINDOW_AUTOSIZE)
+cv2.namedWindow("img_right", cv2.WND_PROP_FULLSCREEN)
+cv2.setWindowProperty("img_right",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
 cv2.imshow("img_right", img_right)
-cv2.waitKey()
+#cv2.waitKey()
 
 retl, threshl = cv2.threshold(img_left,170,255,cv2.THRESH_BINARY) #converts image to black and white based on a min brightness specified
 retr, threshr = cv2.threshold(img_right,170,255,cv2.THRESH_BINARY) #converts image to black and white based on a min brightness specified
@@ -109,8 +109,8 @@ rows_l,cols_l = img_left.shape[:2]
 leftyl = int((-xl*vyl/vxl) + yl)
 rightyl = int(((cols_l-xl)*vyl/vxl)+yl)
 imglline = cv2.line(img_left,(cols_l-1,rightyl),(0,leftyl),(255,250,0),1)
-cv2.namedWindow("imglline", cv2.WND_PROP_AUTOSIZE)
-cv2.setWindowProperty("imglline",cv2.WND_PROP_AUTOSIZE,cv2.WINDOW_AUTOSIZE)
+cv2.namedWindow("imglline", cv2.WND_PROP_FULLSCREEN)
+cv2.setWindowProperty("imglline",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
 cv2.imshow('imglline', imglline)
 cv2.waitKey()
 
@@ -119,8 +119,8 @@ rows_r,cols_r = imgr.shape[:2]
 leftyr = int((-xr*vyr/vxr) + yr)
 rightyr = int(((cols_r-xr)*vyr/vxr)+yr)
 imgrline = cv2.line(img_right,(cols_r-1,rightyr),(0,leftyr),(255,250,0),1)
-cv2.namedWindow("imgrline", cv2.WND_PROP_AUTOSIZE)
-cv2.setWindowProperty("imgrline",cv2.WND_PROP_AUTOSIZE,cv2.WINDOW_AUTOSIZE)
+cv2.namedWindow("imgrline", cv2.WND_PROP_FULLSCREEN)
+cv2.setWindowProperty("imgrline",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
 cv2.imshow('imgrline', imgrline)
 cv2.waitKey()
 
@@ -147,9 +147,9 @@ x,y,w,h = cv2.boundingRect(cntr)
 cv2.rectangle(imgr,(x,y),(x+w,y+h),(255,255,255),2)
 lengthr = ((w**2)+(h**2))**(1/2)
 cv2.putText(img, "Right Blade Length = %s pixels" % w, (30,90), cv2.FONT_HERSHEY_SIMPLEX, 1,(255,255,255),1, cv2.LINE_AA)
-cv2.namedWindow('img', cv2.WND_PROP_AUTOSIZE)
+cv2.namedWindow('img', cv2.WND_PROP_FULLSCREEN)
 
-cv2.setWindowProperty('img',cv2.WND_PROP_AUTOSIZE,cv2.WINDOW_AUTOSIZE)
+cv2.setWindowProperty('img',cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
 
 cv2.imshow('img', img)
 cv2.waitKey()
