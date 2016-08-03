@@ -6,8 +6,8 @@ import copy
 import RPi.GPIO as GPIO
 cv2.destroyAllWindows()
 
-cv2.namedWindow('Press space to capture image', cv2.WND_PROP_FULLSCREEN)
-cv2.setWindowProperty('Press space to capture image',cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
+cv2.namedWindow('Press space to capture image', cv2.WND_PROP_AUTOSIZE)
+cv2.setWindowProperty('Press space to capture image',cv2.WND_PROP_AUTOSIZE,cv2.WINDOW_AUTOSIZE)
 
 from picamera.array import PiRGBArray
 from picamera import PiCamera
@@ -156,8 +156,8 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 while True:
 	close = GPIO.input(23)
-	cv2.namedWindow('img', cv2.WND_PROP_FULLSCREEN)
-	cv2.setWindowProperty('img',cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
+	cv2.namedWindow('img', cv2.WND_PROP_AUTOSIZE)
+	cv2.setWindowProperty('img',cv2.WND_PROP_AUTOSIZE,cv2.WINDOW_AUTOSIZE)
 	cv2.imshow('img', img)
 	if close == True:
 		cv2.waitKey(5)
